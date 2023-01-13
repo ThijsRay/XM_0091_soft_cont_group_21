@@ -26,8 +26,10 @@ spec:
         io.kompose.service: backend
     spec:
       containers:
-        - image: 10.209.10.220:5000/project-backend
+        - image: thijsray/backend
           name: backend
+          ports:
+            - containerPort: 80
           resources: {}
       restartPolicy: Always
 status: {}

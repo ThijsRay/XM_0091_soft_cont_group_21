@@ -31,6 +31,8 @@ spec:
               value: oa16BFoBZXbqKUSynmAGT
           image: postgres:15.1-alpine
           name: database
+          ports:
+            - containerPort: 5432
           resources: {}
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
