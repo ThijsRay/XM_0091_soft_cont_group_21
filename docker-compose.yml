@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  ingress:
+    image: localhost:5000/ingress
+    build:
+      context: nginx
+    networks:
+      - nginx-front
+      - nginx-back
+    ports:
+      - "8080:80"
+  frontend:
+    image: localhost:5000/frontend
+    build:
+      context: frontend
+    networks:
+      - nginx-front
+    deploy:
+      replicas: 3
+  backend:
+    image: localhost:5000/backend
+    build:
+      context: backend
+    networks:
+      - nginx-back
+      - back-database
+    deploy:
+      replicas: 3
+  database:
+    image: postgres:15.1-alpine
+    environment:
+      POSTGRES_PASSWORD: "oa16BFoBZXbqKUSynmAGT"
+    volumes:
+      - "database-data:/var/lib/postgresql/data"
+    networks:
+      - back-database
+
+volumes:
+  database-data:
+
+networks:
+  nginx-front:
+  nginx-back:
+  back-database:

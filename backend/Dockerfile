@@ -6,4 +6,4 @@ RUN chmod +x /usr/local/bin/install-php-extensions && \
   install-php-extensions imagick
 
 COPY php.ini "$PHP_INI_DIR/php.ini"
-COPY src/ /var/www/html/
+COPY src/ /var/www/html/api
