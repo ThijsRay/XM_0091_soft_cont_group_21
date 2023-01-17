@@ -7,7 +7,6 @@ metadata:
     app: backend
   name: backend
 spec:
-  # replicas: 1 # TODO remove
   selector:
     matchLabels:
       app: backend
@@ -19,8 +18,8 @@ spec:
         app: backend
     spec:
       containers:
-      - image: kicbase/echo-server:1.0 # TODO change with our custom backend image
-        name: echo-server
+      - image: thijsray/backend
+        name: socon-backend
         resources: {}
 status: {}
 ---
@@ -37,6 +36,8 @@ spec:
   minReplicas: 1
   maxReplicas: 5
   targetCPUUtilizationPercentage: 60
+
+
 ---
 # HTTP frontend
 apiVersion: apps/v1
@@ -47,7 +48,6 @@ metadata:
     app: frontend
   name: frontend
 spec:
-  # replicas: 1 # TODO remove
   selector:
     matchLabels:
       app: frontend
@@ -59,7 +59,7 @@ spec:
         app: frontend
     spec:
       containers:
-      - image: thijsray/frontend # TODO change with our custom frontend image
+      - image: thijsray/frontend
         name: socon-frontend
         resources: {}
 status: {}
@@ -78,21 +78,51 @@ spec:
   maxReplicas: 5
   targetCPUUtilizationPercentage: 60
 ---
-# Inbound traffic load balancer
+
+
+# HTTP Ingress
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ingress
+  name: ingress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ingress
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ingress
+    spec:
+      containers:
+      - image: thijsray/ingress
+        name: socon-ingress
+        resources: {}
+status: {}
+---
+# Frontend inbound traffic load balancer
 apiVersion: v1
 kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    app: frontend
-  name: frontend
+    app: ingress
+  name: ingress
 spec:
   ports:
   - port: 80
     protocol: TCP
     targetPort: 80
   selector:
-    app: frontend
+    app: ingress
   type: LoadBalancer
 status:
   loadBalancer: {}
+
+# TODO allow ingress to talk to both frontend and backend
