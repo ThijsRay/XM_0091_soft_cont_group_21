@@ -59,8 +59,8 @@ spec:
         app: frontend
     spec:
       containers:
-      - image: kicbase/echo-server:1.0 # TODO change with our custom frontend image
-        name: echo-server
+      - image: thijsray/frontend # TODO change with our custom frontend image
+        name: socon-frontend
         resources: {}
 status: {}
 ---
@@ -88,9 +88,9 @@ metadata:
   name: frontend
 spec:
   ports:
-  - port: 8080
+  - port: 80
     protocol: TCP
-    targetPort: 8080
+    targetPort: 80
   selector:
     app: frontend
   type: LoadBalancer
