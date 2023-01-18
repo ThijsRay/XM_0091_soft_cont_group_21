@@ -132,7 +132,6 @@ metadata:
     app: ingress
   name: ingress
 spec:
-  #ingressClassName: ingress
   rules:
     - http:
         paths:
