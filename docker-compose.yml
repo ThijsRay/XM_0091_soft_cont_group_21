@@ -1,10 +1,10 @@
 version: "3"
 
 services:
-  ingress:
+  nginx:
     image: thijsray/ingress
     build:
-      context: nginx
+      context: src/nginx
     networks:
       - nginx-front
       - nginx-back
@@ -15,7 +15,7 @@ services:
     ports:
       - 80
     build:
-      context: frontend
+      context: src/frontend
     networks:
       - nginx-front
     deploy:
@@ -25,7 +25,7 @@ services:
     ports:
       - 80
     build:
-      context: backend
+      context: src/backend
     networks:
       - nginx-back
       - back-database
