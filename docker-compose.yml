@@ -31,6 +31,11 @@ services:
       - back-database
     deploy:
       replicas: 3
+    environment:
+      POSTGRES_HOST: database
+      POSTGRES_PASSWORD: "oa16BFoBZXbqKUSynmAGT"
+    volumes:
+      - /home/thijs/Projects/VU/soco/project/src/backend/src:/var/www/html/api
   database:
     image: postgres:15.1-alpine
     ports:
