@@ -149,5 +149,69 @@ spec:
                 name: frontend
                 port:
                   number: 80
+---
+# Persistent volume for postgres
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+spec:
+  storageClassName: local
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/postgres-pv/
+---
+# Persistent volume claim for postgres
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pv-claim
+spec:
+  storageClassName: local
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
 
-# TODO allow ingress to talk to both frontend and backend
+---
+# Postgres deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - image: postgres:15.1
+          name: socon-database
+          volumeMounts:
+             - mountPath: /var/lib/postgresql/data
+               name: postgres
+      volumes:
+        - name: postgres
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim
+---
+# Postgres service
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres
+  name: postgres
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
