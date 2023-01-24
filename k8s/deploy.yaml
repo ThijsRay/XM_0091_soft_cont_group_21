@@ -28,6 +28,21 @@ spec:
                 name: postgres-credentials
                 key: password
                 optional: false
+          - name: POSTGRES_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: config
+                key: postgres_host
+          - name: POSTGRES_USER
+            valueFrom:
+              configMapKeyRef:
+                name: config
+                key: postgres_user
+          - name: POSTGRES_DB
+            valueFrom:
+              configMapKeyRef:
+                name: config
+                key: postgres_db
 status: {}
 ---
 # PHP backend autoscaler

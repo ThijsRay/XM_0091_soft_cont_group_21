@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+immutable: true
+data:
+  postgres_host: postgres
+  postgres_user: postgres
+  postgres_db: postgres
