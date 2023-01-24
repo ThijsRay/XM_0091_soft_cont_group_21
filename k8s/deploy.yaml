@@ -21,6 +21,13 @@ spec:
       - image: thijsray/backend
         name: socon-backend
         resources: {}
+        env:
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-credentials
+                key: password
+                optional: false
 status: {}
 ---
 # PHP backend autoscaler
@@ -198,6 +205,13 @@ spec:
           volumeMounts:
              - mountPath: /var/lib/postgresql/data
                name: postgres
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: password
+                  optional: false
       volumes:
         - name: postgres
           persistentVolumeClaim:
