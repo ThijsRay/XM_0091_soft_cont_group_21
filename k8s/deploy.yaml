@@ -55,7 +55,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: backend
-  minReplicas: 3
+  minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 60
 ---
@@ -128,7 +128,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: frontend
-  minReplicas: 3
+  minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 60
 ---
@@ -146,39 +146,28 @@ spec:
       port: 80
       targetPort: 80
 ---
-# Persistent volume for postgres
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: postgres-pv
-spec:
-  storageClassName: local
-  capacity:
-    storage: 5Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: /mnt/postgres-pv/
----
 # Persistent volume claim for postgres
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-pv-claim
+  labels: # TODO remove
+    topology.kubernetes.io/zone: europe-west1
 spec:
-  storageClassName: local
+  storageClassName: standard-rwo
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 5Gi
-
 ---
 # Postgres deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
+  labels:
+    topology.kubernetes.io/zone: europe-west1
 spec:
   selector:
     matchLabels:
@@ -192,7 +181,8 @@ spec:
         - image: postgres:15.1
           name: socon-database
           volumeMounts:
-             - mountPath: /var/lib/postgresql/data
+             - mountPath: /var/lib/postgresql
+               subPath: data
                name: postgres
           env:
             - name: POSTGRES_PASSWORD

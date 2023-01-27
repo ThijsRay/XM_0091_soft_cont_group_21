@@ -7,6 +7,9 @@ metadata:
     cert-manager.io/common-name: socon.k8s
     nginx.ingress.kubernetes.io/proxy-body-size: 50m
     nginx.org/client-max-body-size: "50m"
+    kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.allow-http: "true"
+    kubernetes.io/ingress.global-static-ip-name: web-ip
   labels:
     app: ingress
   name: ingress
