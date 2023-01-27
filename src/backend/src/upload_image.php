@@ -15,7 +15,9 @@ if (!isset($_FILES['image'])) {
 $image = $_FILES['image'];
 $im = new Imagick();
 $im->readimage($image['tmp_name']);
+
 $im->setImageType(Imagick::IMGTYPE_GRAYSCALE);
+$im->adaptiveResizeImage(200, 200);
 
 $encoded = base64_encode($im->getImageBlob());
 

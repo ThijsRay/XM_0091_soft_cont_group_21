@@ -37,11 +37,6 @@ function get_9_random_images($db)
     array_push($images, $placeholder);
   }
 
-  // Resize all images
-  foreach ($images as $image) {
-    $image->adaptiveResizeImage(200, 200);
-  }
-
   $combined = new Imagick();
   for ($row = 0; $row < 9; $row += 3) {
     $row_image = new Imagick();
