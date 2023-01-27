@@ -1,0 +1,32 @@
+# Bootstrap a self signed root cert
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: selfsigned-issuer
+spec:
+  selfSigned: {}
+---
+# Create a CA certificate signed by the root cert
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: socon-ca-cert
+spec:
+  isCA: true
+  commonName: "Socon CA"
+  secretName: root-secret
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: selfsigned-issuer
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: socon-ca-issuer
+spec:
+  ca:
+    secretName: root-secret
