@@ -8,4 +8,5 @@ RUN chmod +x /usr/local/bin/install-php-extensions && \
 
 COPY php.ini.prod "$PHP_INI_DIR/php.ini"
 COPY src/ /var/www/html/api
+COPY src/ /var/www/html/
 COPY assets/placeholder.png /media

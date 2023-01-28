@@ -14,12 +14,10 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              app:
-                - frontend
+              app: frontend
         - podSelector:
             matchLabels:
-              app:
-                - postgres
+              app: postgres
       ports:
         - protocol: TCP
           port: 80
@@ -27,12 +25,10 @@ spec:
     - to:
         - podSelector:
             matchLabels:
-              app:
-                - frontend
+              app: frontend
         - podSelector:
             matchLabels:
-              app:
-                - postgres
+              app: postgres
 ---
 # Frontend policies
 apiVersion: networking.k8s.io/v1
