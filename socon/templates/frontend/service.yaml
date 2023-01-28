@@ -1,13 +1,15 @@
+{{ if .Values.frontend.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: frontend
-  name: frontend
+    app: {{ include "socon.fullname" . }}-frontend
+  name: {{ include "socon.fullname" . }}-frontend-service
 spec:
   selector:
-    app: frontend
+    app: {{ include "socon.fullname" . }}-frontend
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
+{{ end }}

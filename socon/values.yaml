@@ -4,11 +4,16 @@
 
 frontend:
   enabled: true
-  replicaCount: 1
   image:
     repository: thijsray/frontend
     tag: "latest"
     pullPolicy: IfNotPresent
+  autoscaler:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 60
+
 
 imagePullSecrets: []
 nameOverride: ""

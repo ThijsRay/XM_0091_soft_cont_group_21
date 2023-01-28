@@ -1,13 +1,15 @@
+{{ if and .Values.frontend.enabled .Values.frontend.autoscaler.enabled }}
 # HTTP frontend autoscaler
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: frontend
+  name: {{ include "socon.fullname" . }}-frontend-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: frontend
-  minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 60
+    name: {{ include "socon.fullname" . }}-frontend
+  minReplicas: {{ .Values.frontend.autoscaler.minReplicas }}
+  maxReplicas: {{ .Values.frontend.autoscaler.maxReplicas }}
+  targetCPUUtilizationPercentage: {{ .Values.frontend.autoscaler.targetCPUUtilizationPercentage }}
+{{ end }}

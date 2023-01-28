@@ -1,25 +1,26 @@
+{{ if .Values.frontend.enabled }}
 # HTTP frontend
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: frontend
-  name: frontend
+    app: {{ include "socon.fullname" . }}-frontend
+  name: {{ include "socon.fullname" . }}-frontend
 spec:
   selector:
     matchLabels:
-      app: frontend
+      app: {{ include "socon.fullname" . }}-frontend
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: frontend
+        app: {{ include "socon.fullname" . }}-frontend
     spec:
       containers:
-      - image: thijsray/frontend
-        name: socon-frontend
+      - image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag | default .Chart.AppVersion}}"
+        name: {{ include "socon.fullname" . }}-frontend
         resources: {}
         livenessProbe:
           httpGet:
@@ -42,3 +43,4 @@ spec:
           successThreshold: 1
           failureThreshold: 5
 status: {}
+{{ end }}
