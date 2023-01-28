@@ -4,7 +4,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{ include "socon.fullname" . }}-postgres-pv-claim
 spec:
-  storageClassName: {{ .Values.database.storage.storageClassName }}
+  storageClassName: {{ .Values.database.storage.storageClassName | quote }}
   accessModes:
     - ReadWriteOnce
   resources:

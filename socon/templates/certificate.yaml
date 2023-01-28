@@ -1,8 +1,9 @@
 # Bootstrap a self signed root cert
+{{ if .Capabilities.APIVersions.Has "cert-manager.io/v1" }}
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: selfsigned-issuer
+  name: {{ include "socon.fullname" . }}-selfsigned-issuer
 spec:
   selfSigned: {}
 ---
@@ -10,23 +11,24 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: socon-ca-cert
+  name: {{ include "socon.fullname" . }}-ca-cert
 spec:
   isCA: true
-  commonName: "Socon CA"
-  secretName: root-secret
+  commonName: {{ .Values.certificates.ca_name }}
+  secretName: {{include "socon.fullname" . }}-root-secret
   privateKey:
     algorithm: ECDSA
     size: 256
   issuerRef:
-    name: selfsigned-issuer
+    name: {{ include "socon.fullname" . }}-selfsigned-issuer
     kind: Issuer
     group: cert-manager.io
 ---
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: socon-ca-issuer
+  name: {{ include "socon.fullname" . }}-ca-issuer
 spec:
   ca:
-    secretName: root-secret
+    secretName: {{include "socon.fullname" . }}-root-secret
+{{ end }}

@@ -21,23 +21,23 @@ spec:
         imagePullPolicy: "{{ .Values.backend.image.pullPolicy }}"
         resources: {}
         env:
-          - name: POSTGRES_HOST
-            value: {{ print ( include "socon.fullname" . ) "-postgres" }}
-          - name: POSTGRES_USER
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "socon.fullname" . }}-postgres-credentials
-                key: user
-                optional: false
-          - name: POSTGRES_PASSWORD
-            value:
-              secretKeyRef:
-                name: {{ include "socon.fullname" . }}-postgres-credentials
-                key: password
-                optional: false
-          - name: POSTGRES_DB
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "socon.fullname" . }}-postgres-credentials
-                key: dbname
-                optional: false
+        - name: POSTGRES_HOST
+          value: {{ print ( include "socon.fullname" . ) "-postgres" | quote }}
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "socon.fullname" . }}-postgres-credentials
+              key: user
+              optional: false
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "socon.fullname" . }}-postgres-credentials
+              key: password
+              optional: false
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "socon.fullname" . }}-postgres-credentials
+              key: dbname
+              optional: false

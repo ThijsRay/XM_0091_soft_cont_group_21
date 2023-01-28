@@ -3,36 +3,38 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    cert-manager.io/issuer: socon-ca-issuer
-    cert-manager.io/common-name: socon.k8s
+    cert-manager.io/issuer: {{ include "socon.fullname" . }}-ca-issuer
+    cert-manager.io/common-name: {{ .Values.ingress.hostname }}
     nginx.ingress.kubernetes.io/proxy-body-size: 50m
     nginx.org/client-max-body-size: "50m"
+    {{ if eq .Values.ingress.class "gce" }}
     kubernetes.io/ingress.class: gce
     kubernetes.io/ingress.allow-http: "true"
     kubernetes.io/ingress.global-static-ip-name: web-ip
+    {{ end }}
   labels:
-    app: ingress
-  name: ingress
+    app: {{ include "socon.fullname" . }}-ingress
+  name: {{ include "socon.fullname" . }}-ingress
 spec:
   rules:
-    - host: socon.k8s
+    - host: {{ .Values.ingress.hostname | quote }}
       http:
         paths:
           - path: /api
             pathType: Prefix
             backend:
               service:
-                name: backend
+                name: {{ include "socon.fullname" . }}-backend
                 port:
                   number: 80
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: frontend
+                name: {{ include "socon.fullname" . }}-frontend
                 port:
                   number: 80
   tls: # < placing a host in the TLS config will determine what ends up in the cert's subjectAltNames
-  - hosts:
-    - socon.k8s
-    secretName: ingress-cert # < cert-manager will store the created certificate in this secret
+  - hosts: 
+    - {{ .Values.ingress.hostname | quote }}
+    secretName: {{ include "socon.fullname" . }}-ingress-cert # < cert-manager will store the created certificate in this secret

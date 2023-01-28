@@ -4,11 +4,11 @@ kind: PersistentVolume
 metadata:
   name: {{ include "socon.fullname" . }}-postgres-pv
 spec:
-  storageClassName: local
+  storageClassName: {{ .Values.database.storage.storageClassName | quote }}
   capacity:
     storage: {{ .Values.database.storage.size }}
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/mnt/{{include "socon.fullname" . }}-postgres-pv/"
+    path: "/data/{{include "socon.fullname" . }}-postgres-pv/"
 {{ end }}

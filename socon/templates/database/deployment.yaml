@@ -16,9 +16,14 @@ spec:
         - image: "{{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}"
           name: {{ include "socon.fullname" . }}-postgres
           volumeMounts:
-             - mountPath: /var/lib/postgresql
-               subPath: data
-               name: {{ include "socon.fullname" . }}-postgres-volumemount
+            {{ if eq .Values.database.storage.storageClassName "local"}}
+            - mountPath: /var/lib/postgresql/data
+              name: {{ include "socon.fullname" . }}-postgres-volumemount
+            {{ else }}
+            - mountPath: /var/lib/postgresql
+              subPath: data
+              name: {{ include "socon.fullname" . }}-postgres-volumemount
+            {{ end }}
           env:
             - name: POSTGRES_USER
               valueFrom:
@@ -27,7 +32,7 @@ spec:
                   key: user
                   optional: false
             - name: POSTGRES_PASSWORD
-              value:
+              valueFrom:
                 secretKeyRef:
                   name: {{ include "socon.fullname" . }}-postgres-credentials
                   key: password
