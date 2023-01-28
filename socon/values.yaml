@@ -3,7 +3,6 @@
 # Declare variables to be passed into your templates.
 
 frontend:
-  enabled: true
   image:
     repository: thijsray/frontend
     tag: "latest"
@@ -14,6 +13,30 @@ frontend:
     maxReplicas: 10
     targetCPUUtilizationPercentage: 60
 
+backend:
+  image:
+    repository: thijsray/backend
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  autoscaler:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 60
+
+database:
+  image:
+    repository: postgres
+    tag: "15.1"
+  credentials:
+    username: postgres
+    password: super_secret_password_change_me
+    dbname: postgres
+  storage:
+    size: "5Gi"
+    # Must be "local" if running locally
+    # Must be "standard-rwo" if running on GKE (or one of their other supported storage classes)
+    storageClassName: local
 
 imagePullSecrets: []
 nameOverride: ""

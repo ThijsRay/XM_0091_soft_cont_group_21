@@ -1,0 +1,44 @@
+# Postgres deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "socon.fullname" . }}-postgres
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "socon.fullname" . }}-postgres
+  template:
+    metadata:
+      labels:
+        app: {{ include "socon.fullname" . }}-postgres
+    spec:
+      containers:
+        - image: "{{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}"
+          name: {{ include "socon.fullname" . }}-postgres
+          volumeMounts:
+             - mountPath: /var/lib/postgresql
+               subPath: data
+               name: {{ include "socon.fullname" . }}-postgres-volumemount
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "socon.fullname" . }}-postgres-credentials
+                  key: user
+                  optional: false
+            - name: POSTGRES_PASSWORD
+              value:
+                secretKeyRef:
+                  name: {{ include "socon.fullname" . }}-postgres-credentials
+                  key: password
+                  optional: false
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "socon.fullname" . }}-postgres-credentials
+                  key: dbname
+                  optional: false
+      volumes:
+        - name: {{ include "socon.fullname" . }}-postgres-volumemount
+          persistentVolumeClaim:
+            claimName: {{ include "socon.fullname" . }}-postgres-pv-claim

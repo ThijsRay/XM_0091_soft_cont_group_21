@@ -1,0 +1,43 @@
+# PHP backend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ include "socon.fullname" . }}-backend
+  name: {{ include "socon.fullname" . }}-backend
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "socon.fullname" . }}-backend
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ include "socon.fullname" . }}-backend
+    spec:
+      containers:
+      - image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag | default .Chart.AppVersion}}"
+        name: {{ include "socon.fullname" . }}-backend
+        imagePullPolicy: "{{ .Values.backend.image.pullPolicy }}"
+        resources: {}
+        env:
+          - name: POSTGRES_HOST
+            value: {{ print ( include "socon.fullname" . ) "-postgres" }}
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "socon.fullname" . }}-postgres-credentials
+                key: user
+                optional: false
+          - name: POSTGRES_PASSWORD
+            value:
+              secretKeyRef:
+                name: {{ include "socon.fullname" . }}-postgres-credentials
+                key: password
+                optional: false
+          - name: POSTGRES_DB
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "socon.fullname" . }}-postgres-credentials
+                key: dbname
+                optional: false

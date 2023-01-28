@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ include "socon.fullname" . }}-backend
+  name: {{ include "socon.fullname" . }}-backend
+spec:
+  selector:
+    app: {{ include "socon.fullname" . }}-backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

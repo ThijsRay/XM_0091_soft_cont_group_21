@@ -1,9 +1,7 @@
-{{ if .Values.frontend.enabled }}
 # HTTP frontend
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     app: {{ include "socon.fullname" . }}-frontend
   name: {{ include "socon.fullname" . }}-frontend
@@ -21,6 +19,7 @@ spec:
       containers:
       - image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag | default .Chart.AppVersion}}"
         name: {{ include "socon.fullname" . }}-frontend
+        imagePullPolicy: "{{ .Values.frontend.image.pullPolicy }}"
         resources: {}
         livenessProbe:
           httpGet:
@@ -42,5 +41,3 @@ spec:
           periodSeconds: 5
           successThreshold: 1
           failureThreshold: 5
-status: {}
-{{ end }}

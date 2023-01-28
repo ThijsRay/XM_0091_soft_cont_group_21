@@ -1,0 +1,12 @@
+# Persistent volume claim for postgres
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "socon.fullname" . }}-postgres-pv-claim
+spec:
+  storageClassName: {{ .Values.database.storage.storageClassName }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.database.storage.size }}

@@ -1,4 +1,4 @@
-{{ if and .Values.frontend.enabled .Values.frontend.autoscaler.enabled }}
+{{ if .Values.frontend.autoscaler.enabled }}
 # HTTP frontend autoscaler
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler

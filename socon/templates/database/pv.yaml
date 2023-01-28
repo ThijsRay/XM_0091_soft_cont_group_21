@@ -1,0 +1,14 @@
+{{ if eq .Values.database.storage.storageClassName "local" }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "socon.fullname" . }}-postgres-pv
+spec:
+  storageClassName: local
+  capacity:
+    storage: {{ .Values.database.storage.size }}
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/{{include "socon.fullname" . }}-postgres-pv/"
+{{ end }}
