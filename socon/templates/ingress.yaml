@@ -10,7 +10,7 @@ metadata:
     {{ if eq .Values.ingress.class "gce" }}
     kubernetes.io/ingress.class: gce
     kubernetes.io/ingress.allow-http: "true"
-    kubernetes.io/ingress.global-static-ip-name: web-ip
+    kubernetes.io/ingress.global-static-ip-name: {{ .Values.ingress.gke.ip_name }}
     {{ end }}
   labels:
     app: {{ include "socon.fullname" . }}-ingress

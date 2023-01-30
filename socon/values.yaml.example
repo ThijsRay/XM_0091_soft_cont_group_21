@@ -45,5 +45,7 @@ certificates:
 
 ingress:
   hostname: "socon.online"
-  class: "" # set to gce when running on GKE
+  class: "" # set to "gce" when running on GKE
+  gke:
+    ip_name: "socon"
 
