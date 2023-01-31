@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "socon.fullname" . }}-backend-only-egress-to-postgres-and-dns
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ include "socon.fullname" . }}-backend
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+      - protocol: TCP
+        port: 53
+      - protocol: UDP
+        port: 53
+  - to:
+    - podSelector:
+        matchLabels:
+          app: {{ include "socon.fullname" . }}-postgres
+    ports:
+      - protocol: TCP
+        port: 5432
+  policyTypes:
+  - Egress
+#  ingress:
+#  - from:
+#    - podSelector:
+#        matchLabels: {}
+#    ports:
+#    - protocol: TCP
+#      port: 80
+#  policyTypes:
+#  - Ingress

@@ -1,0 +1,10 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "socon.fullname" . }}-frontend-deny-egress
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ include "socon.fullname" . }}-frontend
+  policyTypes:
+  - Egress

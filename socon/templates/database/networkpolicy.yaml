@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "socon.fullname" . }}-postgres-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ include "socon.fullname" . }}-postgres
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ include "socon.fullname" . }}-backend
+      ports:
+        - protocol: TCP
+          port: 5432
