@@ -8,9 +8,10 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: 50m
     nginx.org/client-max-body-size: "50m"
     {{ if eq .Values.ingress.class "gce" }}
-    kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.class: {{ .Values.ingress.class }}
     kubernetes.io/ingress.allow-http: "true"
     kubernetes.io/ingress.global-static-ip-name: {{ .Values.ingress.gke.ip_name }}
+    networking.gke.io/v1beta1.FrontendConfig:  {{ print ( include "socon.fullname" . ) "-http-to-https-redirect" | quote }}
     {{ end }}
   labels:
     app: {{ include "socon.fullname" . }}-ingress
@@ -38,3 +39,13 @@ spec:
   - hosts: 
     - {{ .Values.ingress.hostname | quote }}
     secretName: {{ include "socon.fullname" . }}-ingress-cert # < cert-manager will store the created certificate in this secret
+{{ if eq .Values.ingress.class "gce" }}
+---
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: {{ include "socon.fullname" . }}-http-to-https-redirect
+spec:
+  redirectToHttps:
+    enabled: true
+{{ end }}
