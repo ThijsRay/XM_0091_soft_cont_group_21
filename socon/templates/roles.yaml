@@ -1,0 +1,41 @@
+# Monitor pods
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "socon.fullname" . }}-pod-reader
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+---
+# Frontend Dev
+# Check pod logs and modify frontend pod image
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "socon.fullname" . }}-frontend-dev
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods", "pods/logs"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["frontend"]
+  verbs: ["update", "patch"]
+---
+# Devops
+# Scale cluster and modify k8s config
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "socon.fullname" . }}-devops
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources:
+    - pods
+  verbs: ["get", "watch", "list", "update", "patch", "create"]
+- apiGroups: [""] # "" indicates the core API group
+  resources: 
+  - {{ include "socon.fullname" . }}-frontend
+  - {{ include "socon.fullname" . }}-backend
+  - {{ include "socon.fullname" . }}-ingress
+  verbs: ["delete"]

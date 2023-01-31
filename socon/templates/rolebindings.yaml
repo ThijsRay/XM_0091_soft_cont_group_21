@@ -1,0 +1,44 @@
+# Linda is our DevOps Engineer
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "socon.fullname" . }}-linda
+  namespace: default
+subjects:
+- kind: User
+  name: linda-352@socon-376014.iam.gserviceaccount.com 
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: {{ include "socon.fullname" . }}-devops
+  apiGroup: rbac.authorization.k8s.io
+---
+# Jan is Frontend Dev
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "socon.fullname" . }}-jan
+  namespace: default
+subjects:
+- kind: User
+  name: jan-665@socon-376014.iam.gserviceaccount.com
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: {{ include "socon.fullname" . }}-frontend-dev
+  apiGroup: rbac.authorization.k8s.io
+---
+# Kees can monitor things
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "socon.fullname" . }}-kees
+  namespace: default
+subjects:
+- kind: User
+  name: kees-337@socon-376014.iam.gserviceaccount.com
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: {{ include "socon.fullname" . }}-pod-reader
+  apiGroup: rbac.authorization.k8s.io
