@@ -9,7 +9,7 @@ rules:
   verbs: ["get", "watch", "list"]
 ---
 # Frontend Dev
-# Check pod logs and modify frontend pod image
+# Check pod logs and modify frontend resources
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -19,23 +19,26 @@ rules:
   resources: ["pods", "pods/logs"]
   verbs: ["get", "watch", "list"]
 - apiGroups: [""] # "" indicates the core API group
-  resources: ["frontend"]
+  resources: ["*"]
+  resourceNames:
+  - {{ include "socon.fullname" . }}-frontend
   verbs: ["update", "patch"]
 ---
 # Devops
 # Scale cluster and modify k8s config
+# Can't modify database resources
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: {{ include "socon.fullname" . }}-devops
 rules:
 - apiGroups: [""] # "" indicates the core API group
-  resources:
-    - pods
-  verbs: ["get", "watch", "list", "update", "patch", "create"]
+  resources: ["*"]
+  verbs: ["get", "watch", "list", "create"]
 - apiGroups: [""] # "" indicates the core API group
-  resources: 
+  resources: ["*"]
+  resourceNames:
   - {{ include "socon.fullname" . }}-frontend
   - {{ include "socon.fullname" . }}-backend
   - {{ include "socon.fullname" . }}-ingress
-  verbs: ["delete"]
+  verbs: ["update", "patch", "delete"]
