@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: {{ include "socon.fullname" . }}-linda
-  namespace: default
+  namespace: {{ .Release.Namespace }}
 subjects:
 - kind: User
   name: linda-352@socon-376014.iam.gserviceaccount.com 
@@ -18,7 +18,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: {{ include "socon.fullname" . }}-jan
-  namespace: default
+  namespace: {{ .Release.Namespace }}
 subjects:
 - kind: User
   name: jan-665@socon-376014.iam.gserviceaccount.com
@@ -33,7 +33,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: {{ include "socon.fullname" . }}-kees
-  namespace: default
+  namespace: {{ .Release.Namespace }}
 subjects:
 - kind: User
   name: kees-337@socon-376014.iam.gserviceaccount.com
